@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<h3>{% trans "Walk boundary (GPS)" %}</h3>
+<p class="text-muted">{% trans "Open this page on your phone browser. Accuracy depends on GPS." %}</p>
+
+<div class="d-flex gap-2 mb-3">
+  <button class="btn btn-primary" onclick="startTrack()">{% trans "Start" %}</button>
+  <button class="btn btn-secondary" onclick="stopTrack()">{% trans "Stop" %}</button>
+  <button class="btn btn-outline-danger" onclick="resetTrack()">{% trans "Reset" %}</button>
+</div>
+
+<div class="card card-body">
+  <div>{% trans "Points" %}: <span id="count">0</span></div>
+  <div>{% trans "Estimated area" %}: <strong id="area">0</strong> m²</div>
+  <pre id="log" style="white-space: pre-wrap;"></pre>
+</div>
+
+<script src="/static/walk_area.js"></script>
+{% endblock %}

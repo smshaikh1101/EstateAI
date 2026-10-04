@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<h3>{% trans "AI Help (MVP)" %}</h3>
+
+<form method="post" class="card card-body mb-3">
+  {% csrf_token %}
+  <input class="form-control mb-2" name="q" placeholder="{% trans 'Ask something...' %}">
+  <button class="btn btn-primary">{% trans "Ask" %}</button>
+</form>
+
+{% if answer %}
+  <div class="alert alert-info">{{ answer }}</div>
+{% endif %}
+{% endblock %}

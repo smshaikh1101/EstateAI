@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<h3>{% trans "Inbox" %}</h3>
+
+<ul class="list-group">
+  {% for t in threads %}
+    <a class="list-group-item list-group-item-action" href="{% url 'thread_detail' t.id %}">
+      {{ t.property.title }}
+    </a>
+  {% empty %}
+    <li class="list-group-item text-muted">{% trans "No conversations yet." %}</li>
+  {% endfor %}
+</ul>
+{% endblock %}

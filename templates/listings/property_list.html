@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load i18n humanize %}
+{% block content %}
+<h3>{% trans "Properties" %}</h3>
+
+<form class="row g-2 mb-3" method="get">
+  <div class="col-md-4">
+    <input class="form-control" name="q" placeholder="{% trans 'Search' %}" value="{{ filters.q }}">
+  </div>
+  <div class="col-md-3">
+    <input class="form-control" name="district" placeholder="{% trans 'District' %}" value="{{ filters.district }}">
+  </div>
+  <div class="col-md-3">
+    <select class="form-select" name="land_type">
+      <option value="">{% trans "All land types" %}</option>
+      {% for v, label in land_types %}
+        <option value="{{ v }}" {% if filters.land_type == v %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-1">
+    <input class="form-control" name="min_price" placeholder="{% trans 'Min' %}" value="{{ filters.min_price }}">
+  </div>
+  <div class="col-md-1">
+    <input class="form-control" name="max_price" placeholder="{% trans 'Max' %}" value="{{ filters.max_price }}">
+  </div>
+  <div class="col-12">
+    <button class="btn btn-primary">{% trans "Filter" %}</button>
+  </div>
+</form>
+
+<div class="list-group">
+  {% for p in properties %}
+    <a class="list-group-item list-group-item-action" href="{% url 'property_detail' p.pk %}">
+      <div class="d-flex justify-content-between">
+        <strong>{{ p.title }}</strong>
+        <span>₹ {{ p.price_inr|intcomma }}</span>
+      </div>
+      <div class="text-muted">{{ p.district }} {% if p.taluka %} / {{ p.taluka }}{% endif %}</div>
+    </a>
+  {% empty %}
+    <div class="text-muted">{% trans "No properties found." %}</div>
+  {% endfor %}
+</div>
+{% endblock %}

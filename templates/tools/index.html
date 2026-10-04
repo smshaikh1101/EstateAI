@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<h3>{% trans "Tools" %}</h3>
+
+<div class="card card-body mb-3">
+  <h5>{% trans "Area conversion (quick)" %}</h5>
+  <ul>
+    <li>1 guntha = 101.1714 sq m</li>
+    <li>1 acre = 4046.8564 sq m</li>
+    <li>1 sq ft = 0.092903 sq m</li>
+  </ul>
+</div>
+
+<a class="btn btn-outline-primary" href="{% url 'tools_walk_area' %}">{% trans "Walk boundary (GPS)" %}</a>
+{% endblock %}

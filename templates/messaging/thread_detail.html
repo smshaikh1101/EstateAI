@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<h3>{% trans "Chat" %}: {{ thread.property.title }}</h3>
+
+<div class="card card-body mb-3" style="max-height: 300px; overflow:auto;">
+  {% for m in thread.messages.all %}
+    <div class="mb-2">
+      <strong>{{ m.sender.username }}</strong>: {{ m.body }}
+      <div class="text-muted" style="font-size: 12px;">{{ m.created_at }}</div>
+    </div>
+  {% endfor %}
+</div>
+
+<form method="post" class="card card-body">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button class="btn btn-primary">{% trans "Send" %}</button>
+</form>
+{% endblock %}

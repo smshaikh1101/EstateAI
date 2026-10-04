@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<h3>{% if mode == "create" %}{% trans "Post Property" %}{% else %}{% trans "Edit Property" %}{% endif %}</h3>
+
+<form method="post" class="card card-body">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button class="btn btn-primary">{% trans "Save" %}</button>
+</form>
+{% endblock %}
