@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<h3>{% trans "Properties Near Me" %}</h3>
+<p class="text-muted">{% trans "Allow location permission in your browser to see distance-sorted properties." %}</p>
+
+<div class="d-flex gap-2 mb-3">
+  <button class="btn btn-primary" onclick="loadNearby()">{% trans "Find nearby" %}</button>
+</div>
+
+<div id="status" class="text-muted mb-2"></div>
+<div id="results" class="list-group"></div>
+
+<script src="/static/nearby.js"></script>
+{% endblock %}

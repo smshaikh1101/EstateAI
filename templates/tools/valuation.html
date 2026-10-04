@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load i18n humanize %}
+{% block content %}
+<h3>{% trans "Valuation Calculator" %}</h3>
+
+<form class="row g-2 mb-3" method="get">
+  <div class="col-md-3">
+    <label class="form-label">{% trans "Area value" %}</label>
+    <input class="form-control" name="area_value" value="{{ area_value }}" placeholder="e.g. 10">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">{% trans "Area unit" %}</label>
+    <select class="form-select" name="area_unit">
+      <option value="sq_m" {% if area_unit == "sq_m" %}selected{% endif %}>Sq Meter</option>
+      <option value="sqft" {% if area_unit == "sqft" %}selected{% endif %}>Sq Ft</option>
+      <option value="guntha" {% if area_unit == "guntha" %}selected{% endif %}>Guntha</option>
+      <option value="acre" {% if area_unit == "acre" %}selected{% endif %}>Acre</option>
+      <option value="hectare" {% if area_unit == "hectare" %}selected{% endif %}>Hectare</option>
+    </select>
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">{% trans "Rate (INR per sq meter)" %}</label>
+    <input class="form-control" name="rate_inr_per_sq_m" value="{{ rate }}" placeholder="e.g. 15000">
+  </div>
+  <div class="col-md-2 d-flex align-items-end">
+    <button class="btn btn-primary w-100">{% trans "Calculate" %}</button>
+  </div>
+</form>
+
+{% if result %}
+  {% if result.error %}
+    <div class="alert alert-danger">{{ result.error }}</div>
+  {% else %}
+    <div class="alert alert-info">
+      <div>{% trans "Converted area" %}: <strong>{{ result.area_sq_m|floatformat:2 }}</strong> m²</div>
+      <div>{% trans "Estimated valuation" %}: <strong>₹ {{ result.estimate_inr|floatformat:0|intcomma }}</strong></div>
+    </div>
+  {% endif %}
+{% endif %}
+{% endblock %}

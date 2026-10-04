@@ -1,24 +1,87 @@
 {% extends "base.html" %}
 {% load humanize i18n %}
+
+{% block title %}{{ property.title }}{% endblock %}
+
 {% block content %}
-<h3>{{ property.title }}</h3>
-<p class="text-muted">{{ property.district }}{% if property.taluka %} / {{ property.taluka }}{% endif %}{% if property.village %} / {{ property.village }}{% endif %}</p>
+<div class="row">
+  <div class="col-lg-8">
 
-<p>{{ property.description|linebreaks }}</p>
+    <div class="card mb-3">
+      <div class="card-body">
+        <h2 class="mb-1">{{ property.title }}</h2>
+        <div class="text-muted">
+          {{ property.district }}{% if property.taluka %} / {{ property.taluka }}{% endif %}{% if property.village %} / {{ property.village }}{% endif %}
+        </div>
 
-<ul>
-  <li>{% trans "Type" %}: {{ property.get_land_type_display }}</li>
-  <li>{% trans "Area" %}: {{ property.area_value }} {{ property.get_area_unit_display }}</li>
-  <li>{% trans "Price" %}: ₹ {{ property.price_inr|intcomma }}</li>
-</ul>
+        <div class="mt-2 d-flex flex-wrap gap-2">
+          <span class="badge bg-azure-lt">{{ property.get_land_type_display }}</span>
+          <span class="badge bg-green-lt">Trust {{ property.owner.profile.trust_score }}/100</span>
+          <span class="badge bg-blue-lt">{% trans "Seller" %}: {{ property.owner.username }}</span>
+        </div>
+      </div>
+    </div>
 
-{% if user.is_authenticated %}
-  {% if property.owner_id == user.id %}
-    <a class="btn btn-outline-secondary" href="{% url 'property_edit' property.pk %}">{% trans "Edit" %}</a>
-  {% else %}
-    <a class="btn btn-primary" href="{% url 'start_thread' property.pk %}">{% trans "Message seller" %}</a>
-  {% endif %}
-{% else %}
-  <a class="btn btn-primary" href="{% url 'login' %}">{% trans "Login to message seller" %}</a>
-{% endif %}
+    {% if property.images.all %}
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="row g-2">
+            {% for img in property.images.all %}
+              <div class="col-6 col-md-4">
+                <img src="{{ img.image.url }}" class="img-fluid rounded" style="height:160px; object-fit:cover; width:100%;">
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="card mb-3">
+      <div class="card-body">
+        <h3 class="card-title">{% trans "Details" %}</h3>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="text-muted">{% trans "Area" %}</div>
+            <div class="fw-bold">{{ property.area_value }} {{ property.get_area_unit_display }}</div>
+          </div>
+          <div class="col-md-6">
+            <div class="text-muted">{% trans "Price" %}</div>
+            <div class="fw-bold">₹ {{ property.price_inr|intcomma }}</div>
+          </div>
+        </div>
+
+        {% if property.description %}
+          <hr>
+          <div>{{ property.description|linebreaks }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">{% trans "Actions" %}</h3>
+
+        {% if user.is_authenticated %}
+          {% if property.owner_id == user.id %}
+            <a class="btn btn-outline-primary w-100 mb-2" href="{% url 'property_edit' property.pk %}">{% trans "Edit listing" %}</a>
+          {% else %}
+            <a class="btn btn-primary w-100 mb-2" href="{% url 'start_thread' property.pk %}">{% trans "Message seller" %}</a>
+          {% endif %}
+        {% else %}
+          <a class="btn btn-primary w-100" href="{% url 'login' %}">{% trans "Login to contact" %}</a>
+        {% endif %}
+
+        {% if property.contact_phone %}
+          <div class="mt-3">
+            <div class="text-muted small">{% trans "Phone (provided by seller)" %}</div>
+            <div class="fw-bold">{{ property.contact_phone }}</div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

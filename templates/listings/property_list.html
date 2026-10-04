@@ -1,43 +1,82 @@
 {% extends "base.html" %}
 {% load i18n humanize %}
+
+{% block title %}{% trans "Properties" %}{% endblock %}
+
 {% block content %}
-<h3>{% trans "Properties" %}</h3>
+<div class="row mb-3">
+  <div class="col">
+    <h2 class="mb-1">{% trans "Properties" %}</h2>
+    <div class="text-muted">{% trans "Find land & properties across Maharashtra." %}</div>
+  </div>
+</div>
 
-<form class="row g-2 mb-3" method="get">
-  <div class="col-md-4">
-    <input class="form-control" name="q" placeholder="{% trans 'Search' %}" value="{{ filters.q }}">
-  </div>
-  <div class="col-md-3">
-    <input class="form-control" name="district" placeholder="{% trans 'District' %}" value="{{ filters.district }}">
-  </div>
-  <div class="col-md-3">
-    <select class="form-select" name="land_type">
-      <option value="">{% trans "All land types" %}</option>
-      {% for v, label in land_types %}
-        <option value="{{ v }}" {% if filters.land_type == v %}selected{% endif %}>{{ label }}</option>
-      {% endfor %}
-    </select>
-  </div>
-  <div class="col-md-1">
-    <input class="form-control" name="min_price" placeholder="{% trans 'Min' %}" value="{{ filters.min_price }}">
-  </div>
-  <div class="col-md-1">
-    <input class="form-control" name="max_price" placeholder="{% trans 'Max' %}" value="{{ filters.max_price }}">
-  </div>
-  <div class="col-12">
-    <button class="btn btn-primary">{% trans "Filter" %}</button>
-  </div>
-</form>
-
-<div class="list-group">
-  {% for p in properties %}
-    <a class="list-group-item list-group-item-action" href="{% url 'property_detail' p.pk %}">
-      <div class="d-flex justify-content-between">
-        <strong>{{ p.title }}</strong>
-        <span>₹ {{ p.price_inr|intcomma }}</span>
+<div class="card mb-3">
+  <div class="card-body">
+    <form class="row g-2" method="get">
+      <div class="col-md-4">
+        <input class="form-control" name="q" placeholder="{% trans 'Search title, village, taluka...' %}" value="{{ filters.q }}">
       </div>
-      <div class="text-muted">{{ p.district }} {% if p.taluka %} / {{ p.taluka }}{% endif %}</div>
-    </a>
+      <div class="col-md-3">
+        <input class="form-control" name="district" placeholder="{% trans 'District' %}" value="{{ filters.district }}">
+      </div>
+      <div class="col-md-3">
+        <select class="form-select" name="land_type">
+          <option value="">{% trans "All land types" %}</option>
+          {% for v, label in land_types %}
+            <option value="{{ v }}" {% if filters.land_type == v %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-1">
+        <input class="form-control" name="min_price" placeholder="{% trans 'Min' %}" value="{{ filters.min_price }}">
+      </div>
+      <div class="col-md-1">
+        <input class="form-control" name="max_price" placeholder="{% trans 'Max' %}" value="{{ filters.max_price }}">
+      </div>
+      <div class="col-12">
+        <button class="btn btn-primary">{% trans "Search" %}</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="row row-cards">
+  {% for p in properties %}
+    <div class="col-md-6 col-lg-4">
+      <a class="card card-hover text-decoration-none" href="{% url 'property_detail' p.pk %}">
+        {% with first_img=p.images.first %}
+          {% if first_img %}
+            <img class="property-thumb" src="{{ first_img.image.url }}" alt="property">
+          {% else %}
+            <div class="property-thumb d-flex align-items-center justify-content-center text-muted">
+              {% trans "No image" %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start gap-2">
+            <div>
+              <div class="fw-bold">{{ p.title }}</div>
+              <div class="text-muted small">
+                {{ p.district }}{% if p.taluka %} / {{ p.taluka }}{% endif %}
+              </div>
+            </div>
+            <div class="text-end">
+              <div class="fw-bold">₹ {{ p.price_inr|intcomma }}</div>
+            </div>
+          </div>
+
+          <div class="mt-2 d-flex flex-wrap gap-2">
+            <span class="badge bg-azure-lt">{{ p.get_land_type_display }}</span>
+            {% if p.owner.profile %}
+              <span class="badge bg-green-lt">Trust {{ p.owner.profile.trust_score }}/100</span>
+            {% endif %}
+          </div>
+        </div>
+      </a>
+    </div>
   {% empty %}
     <div class="text-muted">{% trans "No properties found." %}</div>
   {% endfor %}

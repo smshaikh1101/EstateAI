@@ -1,0 +1,8 @@
+/* Small polish */
+.card-hover:hover { transform: translateY(-2px); transition: 0.15s; }
+.property-thumb {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  background: #f3f4f6;
+}

@@ -4,8 +4,14 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls.i18n import i18n_patterns
 
+from listings import views as listing_views
+
 urlpatterns = [
     path("i18n/", include("django.conf.urls.i18n")),
+
+    # APIs without language prefix (so JS can call /api/.. safely)
+    path("api/talukas/", listing_views.talukas_api, name="talukas_api"),
+    path("api/properties-geo/", listing_views.properties_geo_api, name="properties_geo_api"),
 ]
 
 urlpatterns += i18n_patterns(

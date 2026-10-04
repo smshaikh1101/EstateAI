@@ -3,9 +3,30 @@
 {% block content %}
 <h3>{% if mode == "create" %}{% trans "Post Property" %}{% else %}{% trans "Edit Property" %}{% endif %}</h3>
 
-<form method="post" class="card card-body">
+<form method="post" enctype="multipart/form-data" class="card card-body">
   {% csrf_token %}
   {{ form.as_p }}
+
+  <label class="form-label">{% trans "Property images" %}</label>
+  <input class="form-control mb-3" type="file" name="images" multiple accept="image/*">
+
+  <datalist id="taluka-list"></datalist>
+
+  {% if mode == "edit" and property %}
+    <div class="mb-3">
+      <div class="text-muted mb-2">{% trans "Existing images" %}</div>
+      <div class="d-flex flex-wrap gap-2">
+        {% for img in property.images.all %}
+          <img src="{{ img.image.url }}" style="width:120px;height:90px;object-fit:cover;border:1px solid #ddd;">
+        {% empty %}
+          <span class="text-muted">{% trans "No images yet." %}</span>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
   <button class="btn btn-primary">{% trans "Save" %}</button>
 </form>
+
+<script src="/static/property_form.js"></script>
 {% endblock %}

@@ -12,5 +12,8 @@
   </ul>
 </div>
 
-<a class="btn btn-outline-primary" href="{% url 'tools_walk_area' %}">{% trans "Walk boundary (GPS)" %}</a>
+<div class="d-flex gap-2">
+  <a class="btn btn-outline-primary" href="{% url 'tools_walk_area' %}">{% trans "Walk boundary (GPS)" %}</a>
+  <a class="btn btn-outline-secondary" href="{% url 'tools_valuation' %}">{% trans "Valuation calculator" %}</a>
+</div>
 {% endblock %}

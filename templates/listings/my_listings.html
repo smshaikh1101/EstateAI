@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load humanize i18n %}
+{% block content %}
+<h3>{% trans "My Listings" %}</h3>
+
+<div class="list-group">
+  {% for p in properties %}
+    <div class="list-group-item">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <strong><a href="{% url 'property_detail' p.pk %}">{{ p.title }}</a></strong>
+          <div class="text-muted">{{ p.district }}{% if p.taluka %} / {{ p.taluka }}{% endif %}</div>
+        </div>
+        <div class="text-end">
+          <div>₹ {{ p.price_inr|intcomma }}</div>
+          <a class="btn btn-sm btn-outline-secondary" href="{% url 'property_edit' p.pk %}">{% trans "Edit" %}</a>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="text-muted">{% trans "No listings yet." %}</div>
+  {% endfor %}
+</div>
+{% endblock %}
